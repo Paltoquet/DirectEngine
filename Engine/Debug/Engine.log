@@ -1,0 +1,18 @@
+﻿  Engine.cpp
+c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(11): error C2065: 'SystemClass': undeclared identifier
+c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(11): error C2065: 'System': undeclared identifier
+c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(16): error C2065: 'System': undeclared identifier
+c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(16): error C2061: syntax error: identifier 'SystemClass'
+c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(17): error C2065: 'System': undeclared identifier
+c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(23): error C2065: 'System': undeclared identifier
+c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(23): error C2227: left of '->Initialize' must point to class/struct/union/generic type
+  c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(23): note: type is 'unknown-type'
+c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(26): error C2065: 'System': undeclared identifier
+c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(26): error C2227: left of '->Run' must point to class/struct/union/generic type
+  c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(26): note: type is 'unknown-type'
+c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(30): error C2065: 'System': undeclared identifier
+c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(30): error C2227: left of '->Shutdown' must point to class/struct/union/generic type
+  c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(30): note: type is 'unknown-type'
+c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(31): error C2065: 'System': undeclared identifier
+c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(31): error C2541: 'delete': cannot delete objects that are not pointers
+c:\users\thibault\documents\visual studio 2015\projects\engine\engine\engine.cpp(32): error C2065: 'System': undeclared identifier
