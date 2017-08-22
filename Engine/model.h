@@ -18,6 +18,11 @@ class Model
 		XMFLOAT2 texture;
 		XMFLOAT3 normal;
 	};
+public:
+	enum TextureType {
+		TGA,
+		DDS
+	};
 
 private:
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
@@ -28,10 +33,11 @@ private:
 
 public:
 	Model();
+	Model(char* file);
 	Model(const Model&);
 	~Model();
 	bool Initialize(ID3D11Device*);
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*);
+	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*, TextureType t_type = TextureType::TGA);
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 
@@ -42,7 +48,7 @@ private:
 	bool InitializeBuffers(ID3D11Device*);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext*);
-	bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*);
+	bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*, TextureType t_type = TextureType::TGA);
 	void ReleaseTexture();
 };
 

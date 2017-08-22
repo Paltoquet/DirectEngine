@@ -7,6 +7,8 @@
 #include "bitmapmodel.h"
 #include "shader.h"
 #include "textureshader.h"
+#include "modelList.h"
+#include "frustrum.h"
 
 #include "lightshader.h"
 #include "light.h"
@@ -33,11 +35,13 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame();
+	bool Frame(int mouseX, int mouseY);
 
 private:
 	D3DClass* m_Direct3D;
 	Camera* m_Camera;
+	Frustum* m_Frustum;
+	ModelList* m_ModelList;
 	Model* m_Model;
 	BitmapModel* m_Bitmap;
 	Shader* m_ColorShader;

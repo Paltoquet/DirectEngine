@@ -10,6 +10,13 @@ Model::Model()
 	m_loader = MeshLoader("ressources/woman.obj");
 }
 
+Model::Model(char* file)
+{
+	m_vertexBuffer = 0;
+	m_indexBuffer = 0;
+	m_Texture = 0;
+	m_loader = MeshLoader(file);
+}
 
 Model::Model(const Model& other)
 {
@@ -207,7 +214,7 @@ bool Model::Initialize(ID3D11Device* device)
 	return true;
 }
 
-bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename)
+bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename, TextureType t_type)
 {
 	bool result;
 
@@ -219,7 +226,7 @@ bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext,
 		return false;
 	}
 	// Load the texture for this model.
-	result = LoadTexture(device, deviceContext, textureFilename);
+	result = LoadTexture(device, deviceContext, textureFilename, t_type);
 	if (!result)
 	{
 		return false;
@@ -228,10 +235,9 @@ bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext,
 	return true;
 }
 
-bool Model::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename)
+bool Model::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename, TextureType t_type)
 {
-	bool result;
-
+	bool result = true;
 
 	// Create the texture object.
 	m_Texture = new Texture();
@@ -240,8 +246,18 @@ bool Model::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext
 		return false;
 	}
 
-	// Initialize the texture object.
-	result = m_Texture->Initialize(device, deviceContext, filename);
+	// Initialize the texture object
+	if (t_type == TextureType::TGA) {
+		result = m_Texture->Initialize(device, deviceContext, filename);
+	}
+	
+	else if (t_type = TextureType::DDS) {
+		const size_t size = strlen(filename) + 1;
+		wchar_t* wText = new wchar_t[size];
+		mbstowcs(wText, filename, size);
+		result = m_Texture->InitializeDDS(device, wText);
+	}
+	
 	if (!result)
 	{
 		return false;
