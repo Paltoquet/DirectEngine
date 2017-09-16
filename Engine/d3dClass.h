@@ -31,6 +31,9 @@ public:
 
 	void GetVideoCardInfo(char*, int&);
 
+	ID3D11DepthStencilView* GetDepthStencilView();
+	void SetBackBufferRenderTarget();
+
 	void TurnZBufferOn();
 	void TurnZBufferOff();
 

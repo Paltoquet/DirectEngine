@@ -6,29 +6,27 @@
 #include "meshLoader.h"
 
 #include "texture.h"
+#include "textureArray.h"
 
 using namespace DirectX;
 
 class Model
 {
 
+public:
 	struct VertexTextureType
 	{
 		XMFLOAT3 position;
 		XMFLOAT2 texture;
 		XMFLOAT3 normal;
 	};
-public:
-	enum TextureType {
-		TGA,
-		DDS
-	};
 
-private:
+protected:
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
 	int m_vertexCount, m_indexCount;
+	bool m_tesselate;
 	Texture* m_Texture;
-
+	TextureArray m_textures;
 	MeshLoader m_loader;
 
 public:
@@ -37,19 +35,25 @@ public:
 	Model(const Model&);
 	~Model();
 	bool Initialize(ID3D11Device*);
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*, TextureType t_type = TextureType::TGA);
+	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*, Texture::TextureType t_type = Texture::TextureType::TGA);
+	void addTexture(ID3D11Device*, ID3D11DeviceContext*, char*, Texture::TextureType t_type = Texture::TextureType::TGA);
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
+	void setTesselate(bool);
 
 	int GetIndexCount();
-	ID3D11ShaderResourceView* GetTexture();
+	Texture* getTextureWrapper() const;
+	ID3D11ShaderResourceView* GetTexture() const;
+	ID3D11ShaderResourceView** getTextures();
+	ID3D11Buffer* getVertexBuffer() const;
+	ID3D11Buffer* getIndexBuffer() const;
 
-private:
-	bool InitializeBuffers(ID3D11Device*);
-	void ShutdownBuffers();
-	void RenderBuffers(ID3D11DeviceContext*);
-	bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*, TextureType t_type = TextureType::TGA);
-	void ReleaseTexture();
+protected:
+	virtual bool InitializeBuffers(ID3D11Device*);
+	virtual void ShutdownBuffers();
+	virtual void RenderBuffers(ID3D11DeviceContext*);
+	virtual bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*, Texture::TextureType t_type = Texture::TextureType::TGA);
+	virtual void ReleaseTexture();
 };
 
 #endif

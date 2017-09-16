@@ -1,7 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: multitexture.vs
+// Filename: clipplane.vs
 ////////////////////////////////////////////////////////////////////////////////
 
+
+/////////////
+// GLOBALS //
+/////////////
 cbuffer MatrixBuffer
 {
     matrix worldMatrix;
@@ -9,7 +13,15 @@ cbuffer MatrixBuffer
     matrix projectionMatrix;
 };
 
+cbuffer ClipPlaneBuffer
+{
+    float4 clipPlane;
+};
 
+
+//////////////
+// TYPEDEFS //
+//////////////
 struct VertexInputType
 {
     float4 position : POSITION;
@@ -20,13 +32,14 @@ struct PixelInputType
 {
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
+	float clip : SV_ClipDistance0;
 };
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Vertex Shader
 ////////////////////////////////////////////////////////////////////////////////
-PixelInputType MultiTextureVertexShader(VertexInputType input)
+PixelInputType ClipPlaneVertexShader(VertexInputType input)
 {
     PixelInputType output;
     
@@ -41,6 +54,9 @@ PixelInputType MultiTextureVertexShader(VertexInputType input)
     
     // Store the texture coordinates for the pixel shader.
     output.tex = input.tex;
-    
+
+	// Set the clipping plane.
+    output.clip = dot(mul(input.position, worldMatrix), clipPlane);
+
     return output;
 }

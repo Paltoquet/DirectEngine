@@ -2,12 +2,14 @@
 #include "model.h"
 
 
-Model::Model()
+Model::Model():
+	m_textures()
 {
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
 	m_Texture = 0;
 	m_loader = MeshLoader("ressources/woman.obj");
+	m_tesselate = false;
 }
 
 Model::Model(char* file)
@@ -20,6 +22,9 @@ Model::Model(char* file)
 
 Model::Model(const Model& other)
 {
+	m_vertexBuffer = other.getVertexBuffer();
+	m_indexBuffer = other.getIndexBuffer();
+	m_Texture = other.getTextureWrapper();
 }
 
 bool Model::InitializeBuffers(ID3D11Device* device)
@@ -30,7 +35,6 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
-
 
 	m_loader.loadMesh();
 	m_vertexCount = m_loader.getNbVertices();
@@ -74,7 +78,7 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 	vertices[0].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	vertices[1].position = XMFLOAT3(-1.0f, 1.0f, 0.0f);  // Top left.
-	//vertices[1].color = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+	vertices[1].color = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 	vertices[1].texture = XMFLOAT2(0.0f, 0.0f);
 	vertices[1].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
@@ -163,16 +167,24 @@ void Model::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
-	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);//D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
+	if (m_tesselate) {
+		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	}
+	else{
+		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);//D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
+	}
 
 	return;
 }
 
-ID3D11ShaderResourceView* Model::GetTexture()
+ID3D11ShaderResourceView* Model::GetTexture() const
 {
 	return m_Texture->GetTexture();
 }
-
+ID3D11ShaderResourceView** Model::getTextures()
+{
+	return m_textures.getRessources();
+}
 void Model::ShutdownBuffers()
 {
 	// Release the index buffer.
@@ -214,7 +226,7 @@ bool Model::Initialize(ID3D11Device* device)
 	return true;
 }
 
-bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename, TextureType t_type)
+bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename, Texture::TextureType t_type)
 {
 	bool result;
 
@@ -235,7 +247,7 @@ bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext,
 	return true;
 }
 
-bool Model::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename, TextureType t_type)
+bool Model::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename, Texture::TextureType t_type)
 {
 	bool result = true;
 
@@ -247,23 +259,43 @@ bool Model::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext
 	}
 
 	// Initialize the texture object
-	if (t_type == TextureType::TGA) {
+	if (t_type == Texture::TextureType::TGA) {
 		result = m_Texture->Initialize(device, deviceContext, filename);
 	}
 	
-	else if (t_type = TextureType::DDS) {
+	else if (t_type == Texture::TextureType::DDS) {
 		const size_t size = strlen(filename) + 1;
 		wchar_t* wText = new wchar_t[size];
 		mbstowcs(wText, filename, size);
 		result = m_Texture->InitializeDDS(device, wText);
 	}
 	
-	if (!result)
-	{
-		return false;
-	}
+	return result;
+}
 
-	return true;
+void Model::setTesselate(bool shouldTesselate)
+{
+	m_tesselate = shouldTesselate;
+}
+
+void Model::addTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename, Texture::TextureType t_type)
+{
+	m_textures.addTexture(device, deviceContext, filename, t_type);
+}
+
+ID3D11Buffer* Model::getVertexBuffer() const
+{
+	return m_vertexBuffer;
+}
+
+ID3D11Buffer* Model::getIndexBuffer() const 
+{
+	return m_indexBuffer;
+}
+
+Texture* Model::getTextureWrapper() const
+{
+	return m_Texture;
 }
 
 void Model::ReleaseTexture()
@@ -275,7 +307,8 @@ void Model::ReleaseTexture()
 		delete m_Texture;
 		m_Texture = 0;
 	}
-
+	
+	m_textures.Shutdown();
 	return;
 }
 

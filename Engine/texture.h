@@ -11,6 +11,12 @@ public:
 	Texture(const Texture&);
 	~Texture();
 
+public:
+	enum TextureType {
+		TGA,
+		DDS
+	};
+
 private:
 	struct TargaHeader
 	{

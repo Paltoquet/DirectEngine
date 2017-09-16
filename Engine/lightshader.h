@@ -47,6 +47,9 @@ public:
 	bool Render(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT3, XMFLOAT4 ambient,
 		XMFLOAT4 diffuse, XMFLOAT3 cameraPosition, XMFLOAT4 specularColor, float specularPower);
 
+	/*/bool Render(ID3D11DeviceContext*, int indexCount, int instanceCount, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT3, XMFLOAT4 ambient,
+		XMFLOAT4 diffuse, XMFLOAT3 cameraPosition, XMFLOAT4 specularColor, float specularPower);*/
+
 private:
 	bool InitializeShader(ID3D11Device*, HWND, WCHAR*, WCHAR*);
 	void ShutdownShader();
@@ -55,6 +58,7 @@ private:
 	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT3, XMFLOAT4 ambient, XMFLOAT4 diffuse,
 		XMFLOAT3 cameraPosition, XMFLOAT4 specularColor, float specularPower);
 	void RenderShader(ID3D11DeviceContext*, int);
+	//void RenderShader(ID3D11DeviceContext*, int indexCount, int instanceCount);
 
 private:
 	ID3D11VertexShader* m_vertexShader;

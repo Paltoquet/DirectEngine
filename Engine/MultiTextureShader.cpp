@@ -12,8 +12,8 @@ MultiTextureShader::MultiTextureShader()
 bool MultiTextureShader::Initialize(ID3D11Device* device, HWND hwnd)
 {
 	bool result;
-		// Initialize the vertex and pixel shaders.
-		result = InitializeShader(device, hwnd, L"multitexture.vs", L"multitexture.ps");
+	// Initialize the vertex and pixel shaders.
+	result = InitializeShader(device, hwnd, L"multitexture.vs", L"multitexture.ps");
 	if (!result)
 	{
 		return false;
@@ -212,11 +212,10 @@ void MultiTextureShader::RenderShader(ID3D11DeviceContext* deviceContext, int in
 bool MultiTextureShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix,
 	XMMATRIX viewMatrix, XMMATRIX projectionMatrix, ID3D11ShaderResourceView** textureArray)
 {
-	bool result;
-	result = Shader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix);
+	Shader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix);
 	// Set shader texture array resource in the pixel shader.
 	deviceContext->PSSetShaderResources(0, 2, textureArray);
-	return result;
+	return true;
 }
 
 void MultiTextureShader::ShutdownShader()

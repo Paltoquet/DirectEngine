@@ -10,15 +10,10 @@
 #include <fstream>
 using namespace std;
 
-
-////////////////////////////////////////////////////////////////////////////////
-// Class name: MultiTextureShaderClass
-////////////////////////////////////////////////////////////////////////////////
 class MultiTextureShader : public Shader
 {
 public:
 	MultiTextureShader();
-	MultiTextureShader(const MultiTextureShader&);
 	~MultiTextureShader();
 
 public:

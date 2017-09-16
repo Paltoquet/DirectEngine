@@ -1,7 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: multitexture.vs
+// Filename: textureAndColor.vs
 ////////////////////////////////////////////////////////////////////////////////
 
+
+/////////////
+// GLOBALS //
+/////////////
 cbuffer MatrixBuffer
 {
     matrix worldMatrix;
@@ -10,23 +14,29 @@ cbuffer MatrixBuffer
 };
 
 
+//////////////
+// TYPEDEFS //
+//////////////
+
 struct VertexInputType
 {
     float4 position : POSITION;
     float2 tex : TEXCOORD0;
+    float4 color : COLOR;
 };
 
 struct PixelInputType
 {
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
+    float4 color : COLOR;
 };
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Vertex Shader
 ////////////////////////////////////////////////////////////////////////////////
-PixelInputType MultiTextureVertexShader(VertexInputType input)
+PixelInputType ParticleVertexShader(VertexInputType input)
 {
     PixelInputType output;
     
@@ -41,6 +51,9 @@ PixelInputType MultiTextureVertexShader(VertexInputType input)
     
     // Store the texture coordinates for the pixel shader.
     output.tex = input.tex;
-    
+
+	  // Store the particle color for the pixel shader. 
+    output.color = input.color;
+
     return output;
 }
